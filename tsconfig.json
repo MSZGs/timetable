@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "declaration": true,
+    "module": "ES6",
+    "moduleResolution": "Node",
+    "noImplicitAny": true,
+    "outDir": "./build/",
+    "target": "ES6",
+    "emitDeclarationOnly": true
+  },
+  "include": ["./src/*", "src/templates/template.html.d.ts", "src/utils/column-data.ts"]
+}
+

@@ -1,0 +1,43 @@
+<style>
+  :host {
+    display: contents;
+  }
+
+  .panel {
+    font-size: 14px;
+    overflow: hidden;
+    text-align: left;
+    height: 100%;
+
+    background-color: #222 ;
+    border: 2px solid #337ab7;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-sizing: border-box;
+    color: #EEE;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 1.42857143;
+    scrollbar-color: #333 #666;
+  }
+
+  .panel-heading {
+    background-color: #337ab7;
+    border-bottom: 1px solid #337ab7;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+
+  .panel-body {
+    padding: 7.5px;
+  }
+</style>
+
+<div class="panel">
+  <div class="panel-heading">
+    <span id="title"> </span>
+  </div>
+  <div class="panel-body">
+      <slot></slot>
+    </span>
+  </div>
+</div>

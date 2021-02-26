@@ -1,0 +1,125 @@
+<style>
+  /*
+  Props:
+  --mszgs-timetable-header-label-monday
+  --mszgs-timetable-header-label-tuesday
+  --mszgs-timetable-header-label-wednesday
+  --mszgs-timetable-header-label-thursday
+  --mszgs-timetable-header-label-friday
+  --mszgs-timetable-header-label-saturday
+  --mszgs-timetable-header-label-sunday
+
+  --mszgs-timetable-min-width
+  */
+  .monday {
+    grid-row: header;
+    grid-column: c0 / c1;
+  }
+
+  .monday::after {
+    content: var(--mszgs-timetable-header-label-monday, "Monday");
+  }
+
+  .tuesday {
+    grid-row: header;
+    grid-column: c1 / c2;
+  }
+
+  .tuesday::after {
+    content: var(--mszgs-timetable-header-label-tuesday, "Tuesday");
+  }
+
+  .wednesday {
+    grid-row: header;
+    grid-column: c2 / c3;
+  }
+
+  .wednesday::after {
+    content: var(--mszgs-timetable-header-label-wednesday, "Wednesday");
+  }
+
+  .thursday {
+    grid-row: header;
+    grid-column: c3 / c4;
+  }
+
+  .thursday::after {
+    content: var(--mszgs-timetable-header-label-thursday, "Thursday");
+  }
+
+  .friday {
+    grid-row: header;
+    grid-column: c4 / c5;
+  }
+
+  .friday::after {
+    content: var(--mszgs-timetable-header-label-friday, "Friday");
+  }
+
+  .saturday {
+    grid-row: header;
+    grid-column: c5 / c6;
+  }
+
+  .saturday::after {
+    content: var(--mszgs-timetable-header-label-saturday, "Saturday");
+  }
+
+  .sunday {
+    grid-row: header;
+    grid-column: c6 / c7;
+  }
+
+  .sunday::after {
+    content: var(--mszgs-timetable-header-label-sunday, "Sunday");
+  }
+
+  .grid {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #222;
+    color: #eee;
+    min-width: var(--mszgs-timetable-min-width, 550px);
+    transition: all 1s;
+    z-index: 0;
+  }
+
+  div {
+    text-align: center;
+    position: relative;
+  }
+
+  .contents {
+    display: contents;
+  }
+
+  .overflow {
+    overflow-x: auto;
+  }
+
+  .grid-line {
+    border-top: 1px #fff solid;
+    grid-column: start / end;
+    z-index: -1;
+  }
+</style>
+<div class="overflow">
+  <div class="grid">
+    <div id="header" class="contents">
+      <div id="monday"    class="header monday"></div>
+      <div id="tuesday"   class="header tuesday"></div>
+      <div id="wednesday" class="header wednesday"></div>
+      <div id="thursday"  class="header thursday"></div>
+      <div id="friday"    class="header friday"></div>
+      <div id="saturday"  class="header saturday"></div>
+      <div id="sunday"    class="header sunday"></div>
+    </div>
+    <div id="timeline" class="contents">
+    </div>
+    <div id="items" class="contents">
+      <slot></slot>
+    </div>
+  </div>
+</div>
