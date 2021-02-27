@@ -54,7 +54,7 @@ __webpack_require__.d(__webpack_exports__, {
   "TimetableRow": () => (/* reexport */ TimetableRow)
 });
 
-;// CONCATENATED MODULE: ./build/utils/template.js
+;// CONCATENATED MODULE: ./src/utils/template.ts
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 class Template {
@@ -88,7 +88,7 @@ class Template {
 
 }
 /* harmony default export */ const template = (Template);
-;// CONCATENATED MODULE: ./build/utils/column-data.js
+;// CONCATENATED MODULE: ./src/utils/column-data.ts
 function column_data_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 class ColumnData {
@@ -133,7 +133,7 @@ class ColumnData {
   }
 
 }
-;// CONCATENATED MODULE: ./build/utils/day.js
+;// CONCATENATED MODULE: ./src/utils/day.ts
 function dayToId(day) {
   switch (day) {
     case "MON":
@@ -188,7 +188,7 @@ function parseDay(dayId) {
       return undefined;
   }
 }
-;// CONCATENATED MODULE: ./build/utils/grid-column-label.js
+;// CONCATENATED MODULE: ./src/utils/grid-column-label.ts
 function grid_column_label_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 class GridColumnLabel {
@@ -246,7 +246,7 @@ class GridColumnLabel {
   }
 
 }
-;// CONCATENATED MODULE: ./build/utils/grid-row-label.js
+;// CONCATENATED MODULE: ./src/utils/grid-row-label.ts
 function grid_row_label_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 class GridRowLabel {
@@ -261,7 +261,7 @@ class GridRowLabel {
   }
 
 }
-;// CONCATENATED MODULE: ./build/utils/time.js
+;// CONCATENATED MODULE: ./src/utils/time.ts
 function time_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 class Time {
@@ -379,7 +379,7 @@ class TimeSpan {
   }
 
 }
-;// CONCATENATED MODULE: ./build/timetable-item.js
+;// CONCATENATED MODULE: ./src/timetable-item.ts
 function timetable_item_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -492,7 +492,7 @@ class TimetableItem extends HTMLElement {
 timetable_item_defineProperty(TimetableItem, "elementName", "mszgs-timetable-item");
 
 customElements.define(TimetableItem.elementName, TimetableItem);
-;// CONCATENATED MODULE: ./build/utils/grid-template-builders.js
+;// CONCATENATED MODULE: ./src/utils/grid-template-builders.ts
 function grid_template_builders_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -615,7 +615,7 @@ class GridTemplateColumnsBuilder {
   }
 
 }
-;// CONCATENATED MODULE: ./build/timetable-row.js
+;// CONCATENATED MODULE: ./src/timetable-row.ts
 function timetable_row_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -690,7 +690,7 @@ timetable_row_defineProperty(TimetableRow, "elementName", "mszgs-timetable-row")
 timetable_row_defineProperty(TimetableRow, "template", new template(templateString));
 
 customElements.define(TimetableRow.elementName, TimetableRow);
-;// CONCATENATED MODULE: ./build/timetable.js
+;// CONCATENATED MODULE: ./src/timetable.ts
 function timetable_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var timetable_templateHtml = "<style>\r\n  /*\r\n  Props:\r\n  --mszgs-timetable-header-label-monday\r\n  --mszgs-timetable-header-label-tuesday\r\n  --mszgs-timetable-header-label-wednesday\r\n  --mszgs-timetable-header-label-thursday\r\n  --mszgs-timetable-header-label-friday\r\n  --mszgs-timetable-header-label-saturday\r\n  --mszgs-timetable-header-label-sunday\r\n\r\n  --mszgs-timetable-min-width\r\n  */\r\n  .monday {\r\n    grid-row: header;\r\n    grid-column: c0 / c1;\r\n  }\r\n\r\n  .monday::after {\r\n    content: var(--mszgs-timetable-header-label-monday, \"Monday\");\r\n  }\r\n\r\n  .tuesday {\r\n    grid-row: header;\r\n    grid-column: c1 / c2;\r\n  }\r\n\r\n  .tuesday::after {\r\n    content: var(--mszgs-timetable-header-label-tuesday, \"Tuesday\");\r\n  }\r\n\r\n  .wednesday {\r\n    grid-row: header;\r\n    grid-column: c2 / c3;\r\n  }\r\n\r\n  .wednesday::after {\r\n    content: var(--mszgs-timetable-header-label-wednesday, \"Wednesday\");\r\n  }\r\n\r\n  .thursday {\r\n    grid-row: header;\r\n    grid-column: c3 / c4;\r\n  }\r\n\r\n  .thursday::after {\r\n    content: var(--mszgs-timetable-header-label-thursday, \"Thursday\");\r\n  }\r\n\r\n  .friday {\r\n    grid-row: header;\r\n    grid-column: c4 / c5;\r\n  }\r\n\r\n  .friday::after {\r\n    content: var(--mszgs-timetable-header-label-friday, \"Friday\");\r\n  }\r\n\r\n  .saturday {\r\n    grid-row: header;\r\n    grid-column: c5 / c6;\r\n  }\r\n\r\n  .saturday::after {\r\n    content: var(--mszgs-timetable-header-label-saturday, \"Saturday\");\r\n  }\r\n\r\n  .sunday {\r\n    grid-row: header;\r\n    grid-column: c6 / c7;\r\n  }\r\n\r\n  .sunday::after {\r\n    content: var(--mszgs-timetable-header-label-sunday, \"Sunday\");\r\n  }\r\n\r\n  .grid {\r\n    display: grid;\r\n    width: 100%;\r\n    height: 100%;\r\n    position: relative;\r\n    background-color: #222;\r\n    color: #eee;\r\n    min-width: var(--mszgs-timetable-min-width, 550px);\r\n    transition: all 1s;\r\n    z-index: 0;\r\n  }\r\n\r\n  div {\r\n    text-align: center;\r\n    position: relative;\r\n  }\r\n\r\n  .contents {\r\n    display: contents;\r\n  }\r\n\r\n  .overflow {\r\n    overflow-x: auto;\r\n  }\r\n\r\n  .grid-line {\r\n    border-top: 1px #fff solid;\r\n    grid-column: start / end;\r\n    z-index: -1;\r\n  }\r\n</style>\r\n<div class=\"overflow\">\r\n  <div class=\"grid\">\r\n    <div id=\"header\" class=\"contents\">\r\n      <div id=\"monday\"    class=\"header monday\"></div>\r\n      <div id=\"tuesday\"   class=\"header tuesday\"></div>\r\n      <div id=\"wednesday\" class=\"header wednesday\"></div>\r\n      <div id=\"thursday\"  class=\"header thursday\"></div>\r\n      <div id=\"friday\"    class=\"header friday\"></div>\r\n      <div id=\"saturday\"  class=\"header saturday\"></div>\r\n      <div id=\"sunday\"    class=\"header sunday\"></div>\r\n    </div>\r\n    <div id=\"timeline\" class=\"contents\">\r\n    </div>\r\n    <div id=\"items\" class=\"contents\">\r\n      <slot></slot>\r\n    </div>\r\n  </div>\r\n</div>\r\n";
@@ -914,7 +914,7 @@ class Timetable extends HTMLElement {
 timetable_defineProperty(Timetable, "elementName", "mszgs-timetable");
 
 customElements.define(Timetable.elementName, Timetable);
-;// CONCATENATED MODULE: ./build/index.js
+;// CONCATENATED MODULE: ./src/index.ts
 
 
 
