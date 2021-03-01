@@ -9,30 +9,24 @@
     text-align: left;
     height: 100%;
 
-    background-color: #222 ;
-    border: 2px solid #337ab7;
+    background: var(--mszgs-timetable-background, var( --mszgs-timetable-background-default));
+    border: 2px solid;
+    border-color: var(--mszgs-timetable-item-primary-color ,var(--mszgs-timetable-item-primary-color-default));
     border-radius: 4px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
     box-sizing: border-box;
-    color: #EEE;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    line-height: 1.42857143;
+    color: var(--mszgs-timetable-color-default, var(--mszgs-timetable-color));
     scrollbar-color: #333 #666;
   }
 
   .panel-heading {
-    background-color: #337ab7;
-    border-bottom: 1px solid #337ab7;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
+    background-color: var(--mszgs-timetable-item-primary-color ,var(--mszgs-timetable-item-primary-color-default));
+    border-bottom: 2px solid;
+    border-color: var(--mszgs-timetable-item-primary-color ,var(--mszgs-timetable-item-primary-color-default));
+    padding: 5px;
   }
 
   .panel-body {
     padding: 7.5px;
-  }
-
-  #title {
-    margin-left: 5px;
   }
 </style>
 

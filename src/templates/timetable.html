@@ -8,13 +8,44 @@
   --mszgs-timetable-header-label-friday
   --mszgs-timetable-header-label-saturday
   --mszgs-timetable-header-label-sunday
-
   --mszgs-timetable-min-width
   */
+
+  :host {
+    --mszgs-timetable-background-default: #222;
+    --mszgs-timetable-header-background-default: var(--mszgs-timetable-background-default);
+    --mszgs-timetable-color-default: #faf7ff;
+    --mszgs-timetable-border-color-default: #faf7ff;
+    --mszgs-timetable-item-primary-color-default: #337ab7;
+
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    overflow: auto;
+    max-height: 100vh;
+    max-width: 100vw;
+    position: relative;
+    display: block;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :host{
+      --mszgs-timetable-background-default: #faf7ff;
+      --mszgs-timetable-header-background-default: var(--mszgs-timetable-background-default);
+      --mszgs-timetable-color-default: black;
+      --mszgs-timetable-border-color-default: black;
+      --mszgs-timetable-item-primary-color-default: #337ab7;
+    }
+  }
+
   .header{
     grid-row: header;
-    justify-self: center;
-    align-self: center;
+    position: sticky;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .monday {
@@ -78,9 +109,9 @@
     width: 100%;
     height: 100%;
     position: relative;
-    background-color: #222;
-    color: #eee;
-    min-width: var(--mszgs-timetable-min-width, 550px);
+    background: var(--mszgs-timetable-background, var( --mszgs-timetable-background-default));
+    color: var(--mszgs-timetable-color-default, var(--mszgs-timetable-color));
+    min-width: var(--mszgs-timetable-min-width, 1000px);
     transition: all 1s;
     z-index: 0;
   }
@@ -94,19 +125,27 @@
     display: contents;
   }
 
-  .overflow {
-    overflow-x: auto;
-  }
-
   .grid-line {
-    border-top: 1px #fff solid;
+    border-top: 1px solid;
+    border-color: var(--mszgs-timetable-border-color-default, var(--mszgs-timetable-border-color));
     grid-column: start / end;
     z-index: -1;
   }
+
+  #header {
+    background: var(--mszgs-timetable-header-background-default, var( --mszgs-timetable-header-background));
+    border-bottom: 1px solid;
+    border-color: var(--mszgs-timetable-border-color-default, var(--mszgs-timetable-border-color));
+    grid-column: start/end;
+    width: 100%;
+    height: 100%;
+  }
 </style>
-<div class="overflow">
   <div class="grid">
-    <div id="header" class="contents">
+    <div id="timeline" class="contents">
+    </div>
+    <div class="contents">
+      <div id="header" class="header"></div>
       <div id="monday"    class="header monday"></div>
       <div id="tuesday"   class="header tuesday"></div>
       <div id="wednesday" class="header wednesday"></div>
@@ -115,10 +154,7 @@
       <div id="saturday"  class="header saturday"></div>
       <div id="sunday"    class="header sunday"></div>
     </div>
-    <div id="timeline" class="contents">
-    </div>
     <div id="items" class="contents">
       <slot></slot>
     </div>
-  </div>
 </div>
