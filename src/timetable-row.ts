@@ -66,4 +66,6 @@ export class TimetableRow extends HTMLElement {
   }
 }
 
-customElements.define(TimetableRow.elementName, TimetableRow);
+if (window.customElements.get(TimetableRow.elementName) === undefined) {
+  window.customElements.define(TimetableRow.elementName, TimetableRow);
+}

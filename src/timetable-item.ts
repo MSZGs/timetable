@@ -12,7 +12,7 @@ export interface TimetableElementData {
   [data: string]: string;
   timeStart?: string;
   timeEnd?: string;
-  day?: string;
+  day?: Day;
   title?: string;
 }
 
@@ -121,4 +121,6 @@ export class TimetableItem extends HTMLElement {
   }
 }
 
-customElements.define(TimetableItem.elementName, TimetableItem);
+if (window.customElements.get(TimetableItem.elementName) === undefined) {
+  window.customElements.define(TimetableItem.elementName, TimetableItem);
+}

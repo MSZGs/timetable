@@ -214,4 +214,6 @@ export class Timetable extends HTMLElement {
   }
 }
 
-customElements.define(Timetable.elementName, Timetable);
+if (window.customElements.get(Timetable.elementName) === undefined) {
+  window.customElements.define(Timetable.elementName, Timetable);
+}
