@@ -10,7 +10,6 @@ module.exports = {
     filename: "mszgs.[name].js",
     sourceMapFilename: "mszgs.[name].js.map",
     library: "timetable",
-    globalObject: "((a) => {if(a.mszgs === undefined) a.mszgs = {}; return a.mszgs})(this)", // ! It's ugly
     libraryTarget: "umd",
   },
   devtool: false,

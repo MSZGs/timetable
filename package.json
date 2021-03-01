@@ -1,8 +1,8 @@
 {
   "name": "@mszgs/timetable",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "",
-  "keywords": [],
+  "keywords": ["timetable","responsive","webcomponent"],
   "author": "MSZGs",
   "license": "MIT",
   "repository": {
