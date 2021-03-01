@@ -13,7 +13,8 @@
   "main": "build/index.js",
   "files": [
     "dist/",
-    "build/"
+    "build/",
+    "locales/"
   ],
   "browser": "dist/mszgs.timetable.js",
   "scripts": {

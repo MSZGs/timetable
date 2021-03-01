@@ -1,0 +1,9 @@
+mszgs-timetable {
+    --mszgs-timetable-header-label-monday: "Monday";
+    --mszgs-timetable-header-label-tuesday: "Tuesday";
+    --mszgs-timetable-header-label-wednesday: "Wednesday";
+    --mszgs-timetable-header-label-thursday: "Thursday";
+    --mszgs-timetable-header-label-friday: "Friday";
+    --mszgs-timetable-header-label-saturday: "Saturday";
+    --mszgs-timetable-header-label-sunday: "Sunday";
+}

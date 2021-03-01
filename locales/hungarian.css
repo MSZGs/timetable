@@ -1,0 +1,9 @@
+mszgs-timetable {
+    --mszgs-timetable-header-label-monday: "Hétfő";
+    --mszgs-timetable-header-label-tuesday: "Kedd";
+    --mszgs-timetable-header-label-wednesday: "Szerda";
+    --mszgs-timetable-header-label-thursday: "Csütörtök";
+    --mszgs-timetable-header-label-friday: "Péntek";
+    --mszgs-timetable-header-label-saturday: "Szombat";
+    --mszgs-timetable-header-label-sunday: "Vasárnap";
+}
