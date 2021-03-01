@@ -14,7 +14,8 @@
   "files": [
     "dist/",
     "build/",
-    "locales/"
+    "locales/",
+    "themes/"
   ],
   "browser": "dist/mszgs.timetable.js",
   "scripts": {

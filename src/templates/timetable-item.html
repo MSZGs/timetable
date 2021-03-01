@@ -12,10 +12,9 @@
     background: var(--mszgs-timetable-background, var( --mszgs-timetable-background-default));
     border: 2px solid;
     border-color: var(--mszgs-timetable-item-primary-color ,var(--mszgs-timetable-item-primary-color-default));
-    border-radius: 4px;
+    border-radius: var(--mszgs-timetable-item-border-radius, var(--mszgs-timetable-item-border-radius-default));
     box-sizing: border-box;
-    color: var(--mszgs-timetable-color-default, var(--mszgs-timetable-color));
-    scrollbar-color: #333 #666;
+    color: var(--mszgs-timetable-color, var(--mszgs-timetable-color-default));
   }
 
   .panel-heading {
@@ -26,7 +25,7 @@
   }
 
   .panel-body {
-    padding: 7.5px;
+    padding: 8px;
   }
 </style>
 

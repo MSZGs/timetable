@@ -17,9 +17,11 @@
     --mszgs-timetable-color-default: #faf7ff;
     --mszgs-timetable-border-color-default: #faf7ff;
     --mszgs-timetable-item-primary-color-default: #337ab7;
+    --mszgs-timetable-item-border-radius-default: 5px;
+    --mszgs-timetable-min-width-default: 1000px;
+    --mszgs-timetable-font-family-default:  "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-
+    font-family: var(--mszgs-timetable-font-family, var(--mszgs-timetable-font-family-default));
     overflow: auto;
     max-height: 100vh;
     max-width: 100vw;
@@ -110,8 +112,8 @@
     height: 100%;
     position: relative;
     background: var(--mszgs-timetable-background, var( --mszgs-timetable-background-default));
-    color: var(--mszgs-timetable-color-default, var(--mszgs-timetable-color));
-    min-width: var(--mszgs-timetable-min-width, 1000px);
+    color: var(--mszgs-timetable-color, var(--mszgs-timetable-color-default));
+    min-width: var(--mszgs-timetable-min-width, var(--mszgs-timetable-min-width-default));
     transition: all 1s;
     z-index: 0;
   }
@@ -126,16 +128,16 @@
   }
 
   .grid-line {
-    border-top: 1px solid;
-    border-color: var(--mszgs-timetable-border-color-default, var(--mszgs-timetable-border-color));
+    border-top: 2px solid;
+    border-color: var(--mszgs-timetable-border-color, var(--mszgs-timetable-border-color-default));
     grid-column: start / end;
     z-index: -1;
   }
 
   #header {
-    background: var(--mszgs-timetable-header-background-default, var( --mszgs-timetable-header-background));
-    border-bottom: 1px solid;
-    border-color: var(--mszgs-timetable-border-color-default, var(--mszgs-timetable-border-color));
+    background: var(--mszgs-timetable-header-background, var( --mszgs-timetable-header-background-default));
+    border-bottom: 2px solid;
+    border-color: var(--mszgs-timetable-border-color, var(--mszgs-timetable-border-color-default));
     grid-column: start/end;
     width: 100%;
     height: 100%;
