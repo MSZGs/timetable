@@ -44,5 +44,5 @@ jobs:
         with: 
           name: timetable
           path: |
-            "dist/*"
-            "build/*"
+            "dist/"
+            "build/"
