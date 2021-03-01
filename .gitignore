@@ -31,5 +31,9 @@ jspm_packages/
 # Optional eslint cache
 .eslintcache
 
+# editor config
+.vscode
+
 # Build
 build
+dist
