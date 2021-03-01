@@ -3,19 +3,19 @@ export type Day = "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
 export function dayToId(day: Day): number {
   switch (day) {
     case "MON":
-      return 1;
+      return 0;
     case "TUE":
-      return 2;
+      return 1;
     case "WED":
-      return 3;
+      return 2;
     case "THU":
-      return 4;
+      return 3;
     case "FRI":
-      return 5;
+      return 4;
     case "SAT":
-      return 6;
+      return 5;
     case "SUN":
-      return 7;
+      return 6;
     default:
       return -1;
   }
@@ -23,19 +23,19 @@ export function dayToId(day: Day): number {
 
 export function parseDay(dayId: number): Day {
   switch (dayId) {
-    case 1:
+    case 0:
       return "MON";
-    case 2:
+    case 1:
       return "TUE";
-    case 3:
+    case 2:
       return "WED";
-    case 4:
+    case 3:
       return "THU";
-    case 5:
+    case 4:
       return "FRI";
-    case 6:
+    case 5:
       return "SAT";
-    case 7:
+    case 6:
       return "SUN";
     default:
       return undefined;
