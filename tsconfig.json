@@ -2,13 +2,19 @@
   "compilerOptions": {
     "allowJs": true,
     "declaration": true,
-    "module": "ES6",
+    "sourceMap": true,
+    "module": "ESNext",
     "moduleResolution": "Node",
     "noImplicitAny": true,
-    "outDir": "./build/",
-    "target": "ES6",
-    "emitDeclarationOnly": true
+    "outDir": "./lib/",
+    "target": "ESNext",
+    "experimentalDecorators": true,
+    "plugins": [
+      {
+        "name": "typescript-lit-html-plugin",
+        "tags": ["html", "template"]
+      }
+    ]
   },
-  "include": ["./src/*", "src/templates/template.html.d.ts", "src/utils/column-data.ts"]
+  "include": ["./src/*"]
 }
-

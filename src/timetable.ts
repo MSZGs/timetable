@@ -1,219 +1,321 @@
-import templateHtml from "./templates/timetable.html";
-import Template from "./utils/template";
-import { TimetableItem, TimetableElementData } from "./timetable-item";
-import { ColumnData } from "./utils/column-data";
-import { Time } from "./utils/time";
-import { GridTemplateColumnsBuilder, GridTemplateRowBuilder } from "./utils/grid-template-builders";
-import { parseDay } from "./utils/day";
-import { TimetableRow } from "./timetable-row";
+import {
+  css,
+  CSSResult,
+  customElement,
+  html,
+  internalProperty,
+  LitElement,
+  property,
+  PropertyValues,
+  TemplateResult,
+} from "lit-element";
+import { styleMap } from "lit-html/directives/style-map";
+import { classMap } from "lit-html/directives/class-map";
 
-const template = new Template(templateHtml);
+import { TimetableItem } from "./timetable-item.js";
+import {
+  GridColumnData,
+  createGridPositionStyleInfo,
+  GridPosition,
+  createRowLabel,
+  createColumnLabel,
+} from "./utils/grid.js";
+import { GridColumnsBuilder, GridRowBuilder } from "./utils/grid-builders.js";
+import { Day, Time, TimeAttributeConverter } from "./utils/time.js";
 
-class IntersectCalculator {
-  private _arr;
+@customElement("mszgs-timetable")
+export class Timetable extends LitElement {
+  @property({ type: Time, converter: TimeAttributeConverter, reflect: true })
+  public from: Time;
 
-  constructor(arr: TimetableItem[]) {
-    this._arr = arr;
-  }
+  @property({ type: Time, converter: TimeAttributeConverter, reflect: true })
+  public to: Time;
 
-  private isIntersect(t1: TimetableItem, t2: TimetableItem): boolean {
-    return t1.time.isIntersect(t2.time);
-  }
+  @property({ type: Array, reflect: true })
+  public days: Day[];
 
-  public calc(): { count: number; targets: Timetable[] }[] {
-    const data = this._arr;
+  @internalProperty()
+  private _gridTemplateRows: string;
 
-    const graph: number[][] = new Array(data.length);
+  @internalProperty()
+  private _gridTemplateColumns: string;
 
-    data.forEach((item, index, array) => {
-      const int: number[] = [];
-      array.forEach((other, i) => {
-        if (item !== other && this.isIntersect(item, other)) {
-          int.push(i);
-        }
-      });
-      graph[index] = int;
-    });
+  @internalProperty()
+  private _rows: Time[];
 
-    //  console.log(graph);
-    /*
-    const done = new Map<number, ColumnData>();
-    const result = new Array<ColumnData>(data.length);
-    const re = graph
-      .map((v, i) => {
-        return { index: i, value: v };
-      })
-      .sort((a, b) => a.value.length - b.value.length);
-    */
-    //   console.log(re);
-    return;
-  }
-}
+  private _itemPositions: WeakMap<TimetableItem, GridPosition>;
 
-export class Timetable extends HTMLElement {
-  public static elementName = "mszgs-timetable";
-
-  private _changeObserver;
-  private _grid: HTMLDivElement;
-  private _timeline: HTMLDivElement;
-  private _rows: Map<string, TimetableRow>;
-
-  static get observedAttributes(): string[] {
-    return ["data-from", "data-to"];
+  public get items(): TimetableItem[] {
+    const slot = this.shadowRoot.querySelector<HTMLSlotElement>("slot:not([name])");
+    if (slot === null) {
+      return [];
+    }
+    return slot.assignedNodes({ flatten: true }).filter(v => v instanceof TimetableItem) as TimetableItem[];
   }
 
   constructor() {
     super();
-    this.attachShadow({ mode: "open" }).appendChild(template.clone());
+    this._rows = [];
+    this._gridTemplateRows = "";
+    this._gridTemplateColumns = "";
+    this.days = ["TUE", "MON", "WED", "THU", "FRI"];
+    this.from = new Time(8, 0);
+    this.to = new Time(16, 0);
 
-    this._grid = this.shadowRoot.querySelector<HTMLDivElement>(".grid");
-    this._timeline = this.shadowRoot.querySelector("#timeline");
-    this._rows = new Map();
+    this._itemPositions = new WeakMap();
+  }
 
-    this._changeObserver = new MutationObserver(this.update.bind(this));
-    this._changeObserver.observe(this, {
-      childList: true,
-      attributes: true,
-      attributeFilter: ["data-time-start", "data-time-end", "data-day"],
-      subtree: true,
+  private _getDayIndex(day: Day): number {
+    return this.days.indexOf(day);
+  }
+
+  private _getItemPosition(item: TimetableItem): GridPosition {
+    if (this._itemPositions.has(item)) {
+      return this._itemPositions.get(item);
+    } else {
+      const gridPosition: GridPosition = {
+        column: new GridColumnData(this._getDayIndex(item.day)),
+        row: { end: item.timeEnd, start: item.timeStart },
+      };
+      this._itemPositions.set(item, gridPosition);
+      return gridPosition;
+    }
+  }
+
+  private _updateItem(item: TimetableItem) {
+    item.column = createGridPositionStyleInfo(this._getItemPosition(item));
+  }
+
+  private _slotChangeHandler() {
+    this._updateColumns();
+    this._updateRows();
+
+    this.items.forEach(item => {
+      this._updateItem(item);
     });
   }
 
-  public add(data: TimetableElementData): void {
-    this.appendChild(new TimetableItem(data));
-  }
+  private _updateColumns() {
+    const builder = new GridColumnsBuilder();
 
-  private update() {
-    this.updateTemplateColumns();
-    this.updateTemplateRows();
-  }
+    builder.setDays(this.days);
 
-  private updateTemplateColumns() {
-    const builder = new GridTemplateColumnsBuilder();
+    this.items.forEach(x => {
+      this._getItemPosition(x).column = new GridColumnData(this._getDayIndex(x.day));
+    });
 
-    for (let i = 0; i <= this.days; i++) {
-      const items = this.items
-        .filter(x => x.day === parseDay(i))
-        .sort((a, b) => {
-          return Time.compare(a.timeStart, b.timeStart);
-        });
-
-      if (items.length === 0) {
-        builder.addColumn([1]);
-        continue;
-      }
-
-      new IntersectCalculator(items).calc();
-
-      const map = new Map<TimetableItem, Set<TimetableItem>>();
+    // TODO: Calculate intersections.
+    /*
+    for (const day of this.days) {
+      const items = this.items.filter(item => item.day === day).sort(TimetableItem.startTimeCompare);
 
       for (const item of items) {
         const set = new Set<TimetableItem>();
 
         for (const otherItem of items) {
-          if (/* item !== otherItem && */ item.time.isIntersect(otherItem.time)) {
+          if (item.time.isIntersect(otherItem.time)) {
             set.add(otherItem);
           }
         }
-
-        map.set(item, set);
       }
-
-      const config = new Map<TimetableItem, ColumnData>();
-
-      for (const item of items) {
-        const intersects = map.get(item);
-        const span = intersects.size;
-
-        config.set(item, new ColumnData(1, 0, span));
-      }
-
-      const columnData = [...config.values()].map(x => x.denominator).concat([1]);
-
-      builder.addColumn(columnData);
     }
+    */
+    this.days.forEach(day => builder.setColumn(day, [1]));
 
-    this._grid.style.gridTemplateColumns = builder.build();
+    this._gridTemplateColumns = builder.build().style;
   }
 
-  private updateTemplateRows() {
-    const builder = new GridTemplateRowBuilder();
+  private _updateRows() {
+    const builder = new GridRowBuilder();
 
-    const from = this.from;
-    const to = this.to;
-
-    if (from !== undefined) {
-      builder.addTime(this.from);
-    }
-
-    if (to !== undefined) {
-      builder.addTime(this.to);
-    }
+    builder.addTime(this.from);
+    builder.addTime(this.to);
 
     this.items.forEach(x => {
       builder.addTime(x.timeStart);
       builder.addTime(x.timeEnd);
+
+      this._getItemPosition(x).row = { end: x.timeEnd, start: x.timeStart };
     });
 
-    this._grid.style.gridTemplateRows = builder.build();
+    const { style: css, rows } = builder.build();
 
-    this.updateRows(builder.minTime(), builder.maxTime());
+    this._gridTemplateRows = css;
+    this._rows = rows;
   }
 
-  public updateRows(from: Time, to: Time): void {
-    //Hide all
-    this._rows.forEach(x => x.hide());
+  protected update(changedProperties: PropertyValues): void {
+    if (changedProperties.has("from") || changedProperties.has("to")) {
+      this._updateRows();
+    }
+    if (changedProperties.has("days")) {
+      this._updateColumns();
+    }
+    super.update(changedProperties);
+  }
 
-    for (const time of Time.range(from.floor(), to.subtract(Time.OneHour))) {
-      const timeLabel = time.toString();
-      if (this._rows.has(timeLabel)) {
-        this._rows.get(timeLabel).show();
-      } else {
-        const newRow = new TimetableRow(time);
-        this._rows.set(timeLabel, newRow);
-        this._timeline.appendChild(newRow);
+  static get styles(): CSSResult {
+    return css`
+      :host {
+        --mszgs-timetable-background-default: #222;
+        --mszgs-timetable-header-background-default: var(--mszgs-timetable-background-default);
+        --mszgs-timetable-color-default: #faf7ff;
+        --mszgs-timetable-border-color-default: #faf7ff;
+        --mszgs-timetable-item-primary-color-default: #337ab7;
+        --mszgs-timetable-item-border-radius-default: 5px;
+        --mszgs-timetable-min-width-default: 1000px;
+        --mszgs-timetable-font-family-default: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+        font-family: var(--mszgs-timetable-font-family, var(--mszgs-timetable-font-family-default));
+        overflow: auto;
+        max-height: 100vh;
+        max-width: 100vw;
+        position: relative;
+        display: block;
       }
-    }
+
+      @media (prefers-color-scheme: light) {
+        :host {
+          --mszgs-timetable-background-default: #faf7ff;
+          --mszgs-timetable-header-background-default: var(--mszgs-timetable-background-default);
+          --mszgs-timetable-color-default: black;
+          --mszgs-timetable-border-color-default: black;
+          --mszgs-timetable-item-primary-color-default: #337ab7;
+        }
+      }
+
+      .header {
+        grid-row: header;
+        position: sticky;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .header.mon::after {
+        content: var(--mszgs-timetable-header-label-monday, "Monday");
+      }
+
+      .header.tue::after {
+        content: var(--mszgs-timetable-header-label-tuesday, "Tuesday");
+      }
+
+      .header.wed::after {
+        content: var(--mszgs-timetable-header-label-wednesday, "Wednesday");
+      }
+
+      .header.thu::after {
+        content: var(--mszgs-timetable-header-label-thursday, "Thursday");
+      }
+
+      .header.fri::after {
+        content: var(--mszgs-timetable-header-label-friday, "Friday");
+      }
+
+      .header.sat::after {
+        content: var(--mszgs-timetable-header-label-saturday, "Saturday");
+      }
+
+      .header.sun::after {
+        content: var(--mszgs-timetable-header-label-sunday, "Sunday");
+      }
+
+      .grid {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        background: var(--mszgs-timetable-background, var(--mszgs-timetable-background-default));
+        color: var(--mszgs-timetable-color, var(--mszgs-timetable-color-default));
+        min-width: var(--mszgs-timetable-min-width, var(--mszgs-timetable-min-width-default));
+        z-index: 0;
+      }
+
+      div {
+        text-align: center;
+        position: relative;
+      }
+
+      .contents {
+        display: contents;
+      }
+
+      .grid-line {
+        border-top: 2px solid;
+        border-color: var(--mszgs-timetable-border-color, var(--mszgs-timetable-border-color-default));
+        grid-column: start / end;
+        z-index: -1;
+      }
+
+      #header {
+        background: var(--mszgs-timetable-header-background, var(--mszgs-timetable-header-background-default));
+        border-bottom: 2px solid;
+        border-color: var(--mszgs-timetable-border-color, var(--mszgs-timetable-border-color-default));
+        grid-column: start/end;
+        width: 100%;
+        height: 100%;
+      }
+
+      .line {
+        border-top: 2px solid;
+        border-color: var(--mszgs-timetable-border-color, var(--mszgs-timetable-border-color-default));
+        grid-column: start / end;
+        z-index: -1;
+      }
+      .line-label {
+        border-top: 2px solid;
+        border-right: 2px solid;
+        border-color: var(--mszgs-timetable-border-color, var(--mszgs-timetable-border-color-default));
+
+        grid-column: 1;
+        padding-top: 5px;
+        position: sticky;
+        left: 0;
+        background: var(--mszgs-timetable-header-background, var(--mszgs-timetable-header-background-default));
+      }
+    `;
   }
 
-  protected attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null): void {
-    if (newVal === null) {
-      return;
-    }
+  private _rowTemplate(time: Time) {
+    const startLabel = createRowLabel(time);
+    const endLabel = createRowLabel(time.add(Time.OneHour));
 
-    if (name === "data-days") {
-      this.updateTemplateColumns();
-    } else if (name === "data-from" || name === "data-to") {
-      this.updateTemplateRows();
-    }
+    return html`<div class="line" style=${styleMap({ gridRowStart: startLabel })}></div>
+      <div class="line-label" style=${styleMap({ gridRow: startLabel, gridRowEnd: endLabel })}>
+        ${time.toString()}
+      </div>`;
   }
 
-  public get from(): Time | undefined {
-    const from = this.dataset["from"];
-    if (from !== undefined) {
-      return Time.parse(from);
-    }
-    return undefined;
+  private _labelTemplate(day: Day, dayIndex: number) {
+    return html`<div
+      id=${day}
+      style=${styleMap({
+        gridColumn: `${createColumnLabel(new GridColumnData(dayIndex))} / ${createColumnLabel(
+          new GridColumnData(dayIndex + 1)
+        )}`,
+      })}
+      class=${classMap({ header: true, [day.toLowerCase()]: true })}
+    ></div>`;
   }
 
-  public get to(): Time | undefined {
-    const to = this.dataset["to"];
-    if (to !== undefined) {
-      return Time.parse(this.dataset["to"]);
-    }
-    return undefined;
+  protected render(): TemplateResult {
+    return html`
+      <div
+        class="grid"
+        style=${styleMap({ gridTemplateRows: this._gridTemplateRows, gridTemplateColumns: this._gridTemplateColumns })}
+      >
+        <div class="contents">${this._rows.map(this._rowTemplate)}</div>
+        <div class="contents">
+          <div id="header" class="header"></div>
+          ${this.days.map(this._labelTemplate)}
+        </div>
+        <div class="contents" @mszgs-item-changed=${this._slotChangeHandler}>
+          <slot @slotchange=${this._slotChangeHandler}></slot>
+        </div>
+      </div>
+    `;
   }
-
-  public get days(): number {
-    return 7;
-    // parseInt(this.dataset["days"]);
-  }
-
-  public get items(): TimetableItem[] {
-    return Array.from(this.querySelectorAll<TimetableItem>(TimetableItem.elementName));
-  }
-}
-
-if (window.customElements.get(Timetable.elementName) === undefined) {
-  window.customElements.define(Timetable.elementName, Timetable);
 }

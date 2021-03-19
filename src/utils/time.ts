@@ -1,3 +1,9 @@
+export type Digit = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type Hour = `0${Digit}` | `1${Digit}` | "20" | "21" | "22" | "23";
+export type Minute = `0${Digit}` | `1${Digit}` | `2${Digit}` | `3${Digit}` | `4${Digit}` | `5${Digit}`;
+export type TimeString = `${Hour}:${Minute}`;
+export type Day = "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
+
 export class Time {
   public static OneHour = new Time(1, 0);
   public static OneMinute = new Time(0, 1);
@@ -22,8 +28,8 @@ export class Time {
     return this.hour + this.min / 60;
   }
 
-  public toString(): string {
-    return `${this.hour > 9 ? "" : "0"}${this.hour}:${this.min > 9 ? "" : "0"}${this.min}`;
+  public toString(): TimeString {
+    return `${this.hour > 9 ? "" : "0"}${this.hour}:${this.min > 9 ? "" : "0"}${this.min}` as TimeString;
   }
 
   public static fromAbsoluteValue(value: number): Time {
@@ -32,8 +38,8 @@ export class Time {
     return new Time(hour, min);
   }
 
-  public static parse(timeString: string): Time {
-    if (timeString === undefined) {
+  public static parse(timeString: TimeString): Time {
+    if (!timeString) {
       return new Time(0, 0);
     }
 
@@ -105,3 +111,8 @@ export class TimeSpan {
     return Time.range(this._start, this._end, step);
   }
 }
+
+export const TimeAttributeConverter = {
+  fromAttribute: (value: TimeString): Time => Time.parse(value),
+  toAttribute: (value: Time): TimeString => value.toString(),
+};

@@ -1,126 +1,106 @@
-import { ColumnData } from "./utils/column-data";
-import { Day, dayToId } from "./utils/day";
-import { GridColumnLabel } from "./utils/grid-column-label";
-import { GridRowLabel } from "./utils/grid-row-label";
-import Template from "./utils/template";
-import { Time, TimeSpan } from "./utils/time";
+import { css, CSSResult, customElement, html, LitElement, property, PropertyValues, TemplateResult } from "lit-element";
+import { styleMap } from "lit-html/directives/style-map";
 
-import templateHtml from "./templates/timetable-item.html";
-const template = new Template(templateHtml);
+import { GridPositionStyleInfo } from "./utils/grid.js";
+import { Day, Time, TimeAttributeConverter, TimeSpan } from "./utils/time.js";
 
-export interface TimetableElementData {
-  [data: string]: string;
-  timeStart?: string;
-  timeEnd?: string;
+export interface TimetableItemData {
+  timeStart?: Time;
+  timeEnd?: Time;
   day?: Day;
   title?: string;
 }
 
-export class TimetableItem extends HTMLElement {
-  public static elementName = "mszgs-timetable-item";
+@customElement("mszgs-timetable-item")
+export class TimetableItem extends LitElement {
+  @property({ type: Time, converter: TimeAttributeConverter, reflect: true, attribute: "time-start" })
+  public timeStart: Time;
 
-  static get observedAttributes(): string[] {
-    return ["data-time-start", "data-time-end", "data-day", "data-title"];
-  }
+  @property({ type: Time, converter: TimeAttributeConverter, reflect: true, attribute: "time-end" })
+  public timeEnd: Time;
 
-  protected _panel: HTMLElement;
-  protected _columnData: ColumnData;
-  private _title: HTMLSpanElement;
+  @property({ type: String, reflect: true })
+  public day: Day;
 
-  constructor(data: TimetableElementData = {}) {
+  @property({ type: String, reflect: true })
+  public title: string;
+
+  @property({ attribute: false })
+  public column: GridPositionStyleInfo;
+
+  constructor(data: TimetableItemData = {}) {
     super();
-    this.attachShadow({ mode: "open" }).appendChild(template.clone());
-    this._columnData = new ColumnData(0);
 
-    this._panel = this.shadowRoot.querySelector<HTMLDivElement>(".panel");
-    this._title = this.shadowRoot.querySelector<HTMLSpanElement>("span#title");
+    this.timeStart = data.timeStart || new Time(0, 0);
+    this.timeEnd = data.timeEnd || new Time(0, 0);
+    this.day = data.day || "MON";
+    this.title = data.title || "";
 
-    Object.keys(data).forEach(x => (this.dataset[x] = data[x]));
+    this.column = {};
   }
 
-  protected attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null): void {
-    if (newVal === null && oldVal === newVal) {
-      return;
+  protected update(_changedProperties: PropertyValues): void {
+    super.update(_changedProperties);
+    if (["timeStart", "timeEnd", "day"].some(x => _changedProperties.has(x))) {
+      this.dispatchEvent(new Event("mszgs-item-changed", { bubbles: true }));
     }
-
-    if (name === "data-time-start" || name === "data-time-end") {
-      this.updateGridRow();
-    } else if (name === "data-day") {
-      this.column = new ColumnData(parseInt(newVal));
-    } else if (name === "data-title") {
-      this._title.innerText = newVal;
-    }
-  }
-
-  protected updateGridColumn(): void {
-    this._panel.style.gridColumnStart = new GridColumnLabel(
-      dayToId(this.day),
-      this.column.start,
-      this.column.denominator
-    ).label;
-    this._panel.style.gridColumnEnd = new GridColumnLabel(
-      dayToId(this.day),
-      this.column.start + this.column.span,
-      this.column.denominator
-    ).label;
-  }
-
-  protected updateGridRow(): void {
-    this._panel.style.gridRowStart = new GridRowLabel(this.timeStart).label;
-    this._panel.style.gridRowEnd = new GridRowLabel(this.timeEnd).label;
-  }
-
-  public update(): void {
-    this.updateGridColumn();
-    this.updateGridRow();
-  }
-
-  public get column(): ColumnData {
-    return this._columnData;
-  }
-
-  public set column(n: ColumnData) {
-    this._columnData = n;
-    this.updateGridColumn();
-  }
-
-  public get timeStart(): Time {
-    return Time.parse(this.dataset["timeStart"]);
-  }
-
-  public set timeStart(time: Time) {
-    this.dataset["timeStart"] = time.toString();
-  }
-
-  public get timeEnd(): Time {
-    return Time.parse(this.dataset["timeEnd"]);
-  }
-
-  public set timeEnd(time: Time) {
-    this.dataset["timeEnd"] = time.toString();
   }
 
   public get time(): TimeSpan {
     return new TimeSpan(this.timeStart, this.timeEnd);
   }
 
-  public get day(): Day {
-    return this.dataset["day"] as Day;
+  static get styles(): CSSResult {
+    return css`
+      :host {
+        display: contents;
+      }
+
+      .panel {
+        font-size: 14px;
+        overflow: hidden;
+        text-align: left;
+        height: 100%;
+
+        background: var(--mszgs-timetable-background, var(--mszgs-timetable-background-default));
+        border: 2px solid;
+        border-color: var(--mszgs-timetable-item-primary-color, var(--mszgs-timetable-item-primary-color-default));
+        border-radius: var(--mszgs-timetable-item-border-radius, var(--mszgs-timetable-item-border-radius-default));
+        box-sizing: border-box;
+        color: var(--mszgs-timetable-color, var(--mszgs-timetable-color-default));
+      }
+
+      .panel-heading {
+        background-color: var(--mszgs-timetable-item-primary-color, var(--mszgs-timetable-item-primary-color-default));
+        border-bottom: 2px solid;
+        border-color: var(--mszgs-timetable-item-primary-color, var(--mszgs-timetable-item-primary-color-default));
+        padding: 5px;
+      }
+
+      .panel-body {
+        padding: 8px;
+      }
+    `;
   }
 
-  public set day(day: Day) {
-    this.dataset["day"] = day;
+  protected render(): TemplateResult {
+    return html`
+      <div class="panel" style=${styleMap(this.column)}>
+        <div class="panel-heading">
+          <span id="title">${this.title}</span>
+        </div>
+        <div class="panel-body">
+          <slot></slot>
+        </div>
+      </div>
+    `;
   }
 
-  public get title(): string {
-    return this.dataset["title"];
+  static startTimeCompare(a: TimetableItem, b: TimetableItem): number {
+    return Time.compare(a.timeStart, b.timeStart);
   }
 
-  public set title(title: string) {
-    this.dataset["title"] = title;
+  static isIntersect(a: TimetableItem, b: TimetableItem): boolean {
+    return a.time.isIntersect(b.time);
   }
-}
-
-if (window.customElements.get(TimetableItem.elementName) === undefined) {
-  window.customElements.define(TimetableItem.elementName, TimetableItem);
 }

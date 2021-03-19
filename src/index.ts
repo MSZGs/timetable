@@ -1,3 +1,3 @@
-export * from "./timetable";
-export * from "./timetable-item";
-export * from "./timetable-row";
+export * from "./timetable.js";
+export * from "./timetable-item.js";
+export * from "./utils/time.js";

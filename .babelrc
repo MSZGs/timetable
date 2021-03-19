@@ -1,4 +1,0 @@
-{
-    "presets": ["@babel/preset-typescript"],
-    "plugins": ["transform-html-import-to-string", "@babel/plugin-proposal-class-properties"]
-}
