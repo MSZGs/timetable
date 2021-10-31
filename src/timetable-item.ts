@@ -25,9 +25,6 @@ export class TimetableItem extends LitElement {
   @property({ type: String, reflect: true })
   public day: Day;
 
-  @property({ type: String, reflect: true })
-  public title: string;
-
   @property()
   public columnStart: ColumnLabel;
 
@@ -82,7 +79,7 @@ export class TimetableItem extends LitElement {
     return html`
       <div class="panel" style=${styleMap(this._gridData)}>
         <div class="panel-heading">
-          <span id="title">${this.title}</span>
+          <slot name="header"></slot>
         </div>
         <div class="panel-body">
           <slot></slot>
