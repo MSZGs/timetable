@@ -1,1 +1,5 @@
 * text=auto eol=lf
+
+rollup.config.js linguist-documentation
+
+*.style.ts linguist-language=CSS
