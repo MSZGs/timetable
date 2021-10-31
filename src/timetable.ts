@@ -63,7 +63,7 @@ export class Timetable extends LitElement {
     } else {
       const gridPosition: GridPosition = {
         column: new GridColumnData(this._getDayIndex(item.day)),
-        row: { end: item.timeEnd, start: item.timeStart },
+        row: { end: item.end, start: item.start },
       };
       this._itemPositions.set(item, gridPosition);
       return gridPosition;
@@ -120,10 +120,10 @@ export class Timetable extends LitElement {
     builder.addTime(this.to);
 
     this.items.forEach(x => {
-      builder.addTime(x.timeStart);
-      builder.addTime(x.timeEnd);
+      builder.addTime(x.start);
+      builder.addTime(x.end);
 
-      this._getItemPosition(x).row = { end: x.timeEnd, start: x.timeStart };
+      this._getItemPosition(x).row = { end: x.end, start: x.start };
     });
 
     const { style: css, rows } = builder.build();

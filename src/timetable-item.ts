@@ -16,11 +16,11 @@ export interface TimetableItemData {
 
 @customElement("mszgs-timetable-item")
 export class TimetableItem extends LitElement {
-  @property({ type: Time, converter: TimeAttributeConverter, reflect: true, attribute: "time-start" })
-  public timeStart: Time;
+  @property({ type: Time, converter: TimeAttributeConverter, reflect: true, attribute: "start" })
+  public start: Time;
 
-  @property({ type: Time, converter: TimeAttributeConverter, reflect: true, attribute: "time-end" })
-  public timeEnd: Time;
+  @property({ type: Time, converter: TimeAttributeConverter, reflect: true, attribute: "end" })
+  public end: Time;
 
   @property({ type: String, reflect: true })
   public day: Day;
@@ -37,8 +37,8 @@ export class TimetableItem extends LitElement {
   constructor(data: TimetableItemData = {}) {
     super();
 
-    this.timeStart = data.timeStart || new Time(0, 0);
-    this.timeEnd = data.timeEnd || new Time(0, 0);
+    this.start = data.timeStart || new Time(0, 0);
+    this.end = data.timeEnd || new Time(0, 0);
     this.day = data.day || "MON";
     this.title = data.title || "";
     this.columnStart = undefined;
@@ -49,8 +49,8 @@ export class TimetableItem extends LitElement {
 
   protected updateColumn(): void {
     this._gridData = {
-      gridRowStart: createRowLabel(this.timeStart),
-      gridRowEnd: createRowLabel(this.timeEnd),
+      gridRowStart: createRowLabel(this.start),
+      gridRowEnd: createRowLabel(this.end),
       gridColumnStart: this.columnStart ? this.columnStart : this.day,
       gridColumnEnd: this.columnEnd ? this.columnEnd : this.day + "-END",
     };
@@ -58,7 +58,7 @@ export class TimetableItem extends LitElement {
 
   protected update(_changedProperties: PropertyValues): void {
     super.update(_changedProperties);
-    if (["timeStart", "timeEnd", "day"].some(x => _changedProperties.has(x))) {
+    if (["start", "end", "day"].some(x => _changedProperties.has(x))) {
       this.updateColumn();
       this.dispatchEvent(new Event("mszgs-item-changed", { bubbles: true }));
     }
@@ -70,7 +70,7 @@ export class TimetableItem extends LitElement {
   }
 
   public get time(): TimeSpan {
-    return new TimeSpan(this.timeStart, this.timeEnd);
+    return new TimeSpan(this.start, this.end);
   }
 
   static styles = [style];
@@ -89,7 +89,7 @@ export class TimetableItem extends LitElement {
   }
 
   static startTimeCompare(a: TimetableItem, b: TimetableItem): number {
-    return Time.compare(a.timeStart, b.timeStart);
+    return Time.compare(a.start, b.start);
   }
 
   static isIntersect(a: TimetableItem, b: TimetableItem): boolean {
