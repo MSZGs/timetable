@@ -4,10 +4,10 @@ import { classMap } from "lit/directives/class-map.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { TimetableItem } from "./timetable-item.js";
-import { GridColumnData, GridPosition, createRowLabel, createColumnLabel, createDayLabel } from "./utils/grid.js";
+import { GridColumnData, GridPosition, createRowLabel, createDayLabel } from "./utils/grid.js";
 import { GridColumnsBuilder, GridRowBuilder } from "./utils/grid-builders.js";
 import { Time, TimeAttributeConverter } from "@mszgs/day-time";
-import { Day } from "./utils/day.js";
+import { Day } from "./types.js";
 
 import { style } from "./styles/timetable.style.js";
 

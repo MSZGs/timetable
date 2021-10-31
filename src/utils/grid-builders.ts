@@ -6,7 +6,7 @@ import {
   ColumnLabel,
   createDayLabel,
 } from "./grid.js";
-import { Day } from "./day.js";
+import { Day } from "../types.js";
 import { Time } from "@mszgs/day-time";
 
 export class GridRowBuilder {

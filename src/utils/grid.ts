@@ -1,6 +1,6 @@
 import { StyleInfo } from "lit/directives/style-map";
 import { Time } from "@mszgs/day-time";
-import { Day } from "./day.js";
+import { Day } from "../types.js";
 
 export type FractionalLabel = `${number}I${number}`;
 export type ColumnLabel = `c${number}` | `c${number}-${FractionalLabel}` | Day | `${Day}-END`;

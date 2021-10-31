@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 
 import { ColumnLabel, createRowLabel, GridPositionStyleInfo } from "./utils/grid.js";
 import { Time, TimeAttributeConverter, TimeSpan } from "@mszgs/day-time";
-import { Day } from "./utils/day.js";
+import { Day } from "./types.js";
 
 import { style } from "./styles/timetable-item.style.js";
 export interface TimetableItemData {
