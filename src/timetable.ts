@@ -46,7 +46,7 @@ export class Timetable extends LitElement {
     this._rows = [];
     this._gridTemplateRows = "";
     this._gridTemplateColumns = "";
-    this.days = ["TUE", "MON", "WED", "THU", "FRI"];
+    this.days = ["MON", "TUE", "WED", "THU", "FRI"];
     this.from = new Time(8, 0);
     this.to = new Time(16, 0);
 
