@@ -1,4 +1,4 @@
-import resolve from "rollup-plugin-node-resolve";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 import { terser } from "rollup-plugin-terser";
 import minifyHTML from "rollup-plugin-minify-html-literals";
 import autoExternal from "rollup-plugin-auto-external";
@@ -21,7 +21,7 @@ export default [
         plugins: [terser(terserConfig)],
       },
     ],
-    plugins: [minifyHTML(), resolve()],
+    plugins: [minifyHTML(), nodeResolve()],
   },
   {
     input: ["lib/index.js"],

@@ -1,16 +1,7 @@
-import {
-  css,
-  CSSResult,
-  customElement,
-  html,
-  internalProperty,
-  LitElement,
-  property,
-  PropertyValues,
-  TemplateResult,
-} from "lit-element";
-import { styleMap } from "lit-html/directives/style-map";
-import { classMap } from "lit-html/directives/class-map";
+import { css, CSSResult, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 import { TimetableItem } from "./timetable-item.js";
 import {
@@ -34,13 +25,13 @@ export class Timetable extends LitElement {
   @property({ type: Array, reflect: true })
   public days: Day[];
 
-  @internalProperty()
+  @state()
   private _gridTemplateRows: string;
 
-  @internalProperty()
+  @state()
   private _gridTemplateColumns: string;
 
-  @internalProperty()
+  @state()
   private _rows: Time[];
 
   private _itemPositions: WeakMap<TimetableItem, GridPosition>;

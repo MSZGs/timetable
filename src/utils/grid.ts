@@ -1,4 +1,4 @@
-import { StyleInfo } from "lit-html/directives/style-map";
+import { StyleInfo } from "lit/directives/style-map";
 import { Time } from "./time";
 
 export interface GridPosition {

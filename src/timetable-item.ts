@@ -1,5 +1,6 @@
-import { css, CSSResult, customElement, html, LitElement, property, PropertyValues, TemplateResult } from "lit-element";
-import { styleMap } from "lit-html/directives/style-map";
+import { css, CSSResult, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 import { GridPositionStyleInfo } from "./utils/grid.js";
 import { Day, Time, TimeAttributeConverter, TimeSpan } from "./utils/time.js";
