@@ -142,6 +142,12 @@ export class Timetable extends LitElement {
     super.update(changedProperties);
   }
 
+  public connectedCallback(): void {
+    super.connectedCallback();
+    this._updateRows();
+    this._updateColumns();
+  }
+
   static styles = [style];
 
   private _rowTemplate(time: Time) {
