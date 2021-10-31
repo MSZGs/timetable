@@ -12,7 +12,8 @@ import {
   createColumnLabel,
 } from "./utils/grid.js";
 import { GridColumnsBuilder, GridRowBuilder } from "./utils/grid-builders.js";
-import { Day, Time, TimeAttributeConverter } from "./utils/time.js";
+import { Time, TimeAttributeConverter } from "@mszgs/day-time";
+import { Day } from "./utils/day.js";
 
 @customElement("mszgs-timetable")
 export class Timetable extends LitElement {
@@ -272,7 +273,7 @@ export class Timetable extends LitElement {
 
   private _rowTemplate(time: Time) {
     const startLabel = createRowLabel(time);
-    const endLabel = createRowLabel(time.add(Time.OneHour));
+    const endLabel = createRowLabel(time.add(Time.HOUR));
 
     return html`<div class="line" style=${styleMap({ gridRowStart: startLabel })}></div>
       <div class="line-label" style=${styleMap({ gridRow: startLabel, gridRowEnd: endLabel })}>

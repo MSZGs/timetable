@@ -1,5 +1,5 @@
 import { StyleInfo } from "lit/directives/style-map";
-import { Time } from "./time";
+import { Time } from "@mszgs/day-time";
 
 export interface GridPosition {
   column: GridColumnData;

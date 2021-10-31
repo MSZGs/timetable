@@ -1,5 +1,6 @@
 import { GridColumnData, createColumnLabel, createRowLabel } from "./grid.js";
-import { Day, Time } from "./time.js";
+import { Day } from "./day.js";
+import { Time } from "@mszgs/day-time";
 
 export class GridRowBuilder {
   private _data: Time[];
@@ -14,9 +15,9 @@ export class GridRowBuilder {
   }
 
   public build(): { style: string; rows: Time[] } {
-    const values = this._data.map(x => x.absoluteValue);
-    const minTime = Time.fromAbsoluteValue(Math.min(...values)).floor();
-    const maxTime = Time.fromAbsoluteValue(Math.max(...values)).ceil();
+    const values = this._data.map(x => x.absoluteMinutes);
+    const minTime = Time.fromAbsoluteMinute(Math.min(...values)).floor();
+    const maxTime = Time.fromAbsoluteMinute(Math.max(...values)).ceil();
 
     this._data.push(...Time.range(minTime, maxTime));
 
@@ -31,7 +32,7 @@ export class GridRowBuilder {
         continue;
       }
 
-      const value = next.absoluteValue - current.absoluteValue;
+      const value = next.absoluteMinutes - current.absoluteMinutes;
       const label = createRowLabel(current);
 
       css.push(`[${label}] ${value}fr`);
@@ -39,7 +40,7 @@ export class GridRowBuilder {
 
     return {
       style: ["[header] 50px", ...css, "[end]"].join(" "),
-      rows: [...Time.range(minTime, maxTime.subtract(Time.OneHour))],
+      rows: [...Time.range(minTime, maxTime.subtract(Time.HOUR))],
     };
   }
 }

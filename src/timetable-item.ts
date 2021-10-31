@@ -3,7 +3,8 @@ import { customElement, property } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { GridPositionStyleInfo } from "./utils/grid.js";
-import { Day, Time, TimeAttributeConverter, TimeSpan } from "./utils/time.js";
+import { Time, TimeAttributeConverter, TimeSpan } from "@mszgs/day-time";
+import { Day } from "./utils/day.js";
 
 export interface TimetableItemData {
   timeStart?: Time;
