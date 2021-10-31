@@ -1,4 +1,11 @@
-import { GridColumnData, createColumnLabel, createRowLabel } from "./grid.js";
+import {
+  GridColumnData,
+  createColumnLabel,
+  createRowLabel,
+  createLabelTag,
+  ColumnLabel,
+  createDayLabel,
+} from "./grid.js";
 import { Day } from "./day.js";
 import { Time } from "@mszgs/day-time";
 
@@ -78,7 +85,6 @@ export class GridColumnsBuilder {
     });
 
     const sortedBreakpoints = breakPoints.sort(GridColumnData.compare);
-
     const css = [];
     for (let i = 0; i < sortedBreakpoints.length - 1; i++) {
       const current = sortedBreakpoints[i];
@@ -89,7 +95,16 @@ export class GridColumnsBuilder {
       }
 
       const value = next.absoluteValue - current.absoluteValue;
-      css.push(`[${createColumnLabel(current)}] ${value}fr`);
+
+      const tags: Array<ColumnLabel> = [];
+      if (current.start == 0) {
+        if (current.column > 0) {
+          tags.push(createDayLabel(this._days[current.column - 1], true));
+        }
+        tags.push(createDayLabel(this._days[current.column]));
+      }
+
+      css.push(`${createLabelTag(...tags, createColumnLabel(current))} ${value}fr`);
     }
     css.push(`[${createColumnLabel(new GridColumnData(this._days.length - 1))}]`);
 

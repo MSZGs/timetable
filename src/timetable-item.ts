@@ -2,7 +2,7 @@ import { html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { createRowLabel, GridPositionStyleInfo } from "./utils/grid.js";
+import { ColumnLabel, createRowLabel, GridPositionStyleInfo } from "./utils/grid.js";
 import { Time, TimeAttributeConverter, TimeSpan } from "@mszgs/day-time";
 import { Day } from "./utils/day.js";
 
@@ -29,10 +29,10 @@ export class TimetableItem extends LitElement {
   public title: string;
 
   @property()
-  public columnStart: string;
+  public columnStart: ColumnLabel;
 
   @property()
-  public columnEnd: string;
+  public columnEnd: ColumnLabel;
 
   @state()
   private _gridData: GridPositionStyleInfo;
@@ -44,6 +44,8 @@ export class TimetableItem extends LitElement {
     this.timeEnd = data.timeEnd || new Time(0, 0);
     this.day = data.day || "MON";
     this.title = data.title || "";
+    this.columnStart = undefined;
+    this.columnEnd = undefined;
 
     this._gridData = {};
   }
@@ -52,6 +54,8 @@ export class TimetableItem extends LitElement {
     this._gridData = {
       gridRowStart: createRowLabel(this.timeStart),
       gridRowEnd: createRowLabel(this.timeEnd),
+      gridColumnStart: this.columnStart ? this.columnStart : this.day,
+      gridColumnEnd: this.columnEnd ? this.columnEnd : this.day + "-END",
     };
   }
 

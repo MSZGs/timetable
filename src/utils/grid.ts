@@ -1,5 +1,9 @@
 import { StyleInfo } from "lit/directives/style-map";
 import { Time } from "@mszgs/day-time";
+import { Day } from "./day.js";
+
+export type FractionalLabel = `${number}I${number}`;
+export type ColumnLabel = `c${number}` | `c${number}-${FractionalLabel}` | Day | `${Day}-END`;
 
 export interface GridPosition {
   column: GridColumnData;
@@ -19,11 +23,23 @@ export interface GridRowData {
   end: Time;
 }
 
+export function createDayLabel(day: Day, end = false): ColumnLabel {
+  if (end) {
+    return `${day}-END`;
+  } else {
+    return day;
+  }
+}
+
+export function createLabelTag(...labels: Array<string>): string {
+  return `[${labels.join(" ")}]`;
+}
+
 export function createRowLabel(time: Time): string {
   return `r${time.hour}-${time.min}`;
 }
 
-export function createColumnLabel(data: GridColumnData): string {
+export function createColumnLabel(data: GridColumnData): ColumnLabel {
   const n = gcd(data.start, data.denominator);
   const start = data.start / n;
   const denominator = data.denominator / n;
