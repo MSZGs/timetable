@@ -1,11 +1,13 @@
 {
   "name": "@mszgs/timetable",
   "version": "0.3.0",
-  "description": "",
+  "description": "Responsive timetable webcomponent.",
   "keywords": [
     "timetable",
     "responsive",
-    "webcomponent"
+    "webcomponent",
+    "lit",
+    "lit-element"
   ],
   "author": "MSZGs",
   "license": "MIT",
