@@ -4,7 +4,7 @@ import { classMap } from "lit/directives/class-map.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { TimetableItem } from "./timetable-item.js";
-import { GridColumnData, GridPosition, createRowLabel, createColumnLabel } from "./utils/grid.js";
+import { GridColumnData, GridPosition, createRowLabel, createColumnLabel, createDayLabel } from "./utils/grid.js";
 import { GridColumnsBuilder, GridRowBuilder } from "./utils/grid-builders.js";
 import { Time, TimeAttributeConverter } from "@mszgs/day-time";
 import { Day } from "./utils/day.js";
@@ -160,13 +160,11 @@ export class Timetable extends LitElement {
       </div>`;
   }
 
-  private _labelTemplate(day: Day, dayIndex: number) {
+  private _labelTemplate(day: Day) {
     return html`<div
       id=${day}
       style=${styleMap({
-        gridColumn: `${createColumnLabel(new GridColumnData(dayIndex))} / ${createColumnLabel(
-          new GridColumnData(dayIndex + 1)
-        )}`,
+        gridColumn: `${createDayLabel(day)} / ${createDayLabel(day, true)}`,
       })}
       class=${classMap({ header: true, [day.toLowerCase()]: true })}
     ></div>`;

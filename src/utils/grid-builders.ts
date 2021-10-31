@@ -76,6 +76,8 @@ export class GridColumnsBuilder {
 
     this._days.forEach((day, column) => {
       const dayData = this._data.get(day);
+      breakPoints.push(new GridColumnData(column));
+      breakPoints.push(new GridColumnData(column + 1));
 
       dayData.forEach(denominator => {
         for (let k = 0; k < denominator; k++) {
@@ -106,7 +108,12 @@ export class GridColumnsBuilder {
 
       css.push(`${createLabelTag(...tags, createColumnLabel(current))} ${value}fr`);
     }
-    css.push(`[${createColumnLabel(new GridColumnData(this._days.length - 1))}]`);
+    css.push(
+      createLabelTag(
+        createDayLabel(this._days[this._days.length - 1], true),
+        createColumnLabel(new GridColumnData(this._days.length - 1))
+      )
+    );
 
     return { style: ["[start] 64px", ...css, `0fr [end]`].join(" ") };
   }
