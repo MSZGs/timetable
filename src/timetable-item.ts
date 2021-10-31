@@ -1,8 +1,8 @@
 import { html, LitElement, PropertyValues, TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { GridPositionStyleInfo } from "./utils/grid.js";
+import { createRowLabel, GridPositionStyleInfo } from "./utils/grid.js";
 import { Time, TimeAttributeConverter, TimeSpan } from "@mszgs/day-time";
 import { Day } from "./utils/day.js";
 
@@ -28,8 +28,14 @@ export class TimetableItem extends LitElement {
   @property({ type: String, reflect: true })
   public title: string;
 
-  @property({ attribute: false })
-  public column: GridPositionStyleInfo;
+  @property()
+  public columnStart: string;
+
+  @property()
+  public columnEnd: string;
+
+  @state()
+  private _gridData: GridPositionStyleInfo;
 
   constructor(data: TimetableItemData = {}) {
     super();
@@ -39,14 +45,27 @@ export class TimetableItem extends LitElement {
     this.day = data.day || "MON";
     this.title = data.title || "";
 
-    this.column = {};
+    this._gridData = {};
+  }
+
+  protected updateColumn(): void {
+    this._gridData = {
+      gridRowStart: createRowLabel(this.timeStart),
+      gridRowEnd: createRowLabel(this.timeEnd),
+    };
   }
 
   protected update(_changedProperties: PropertyValues): void {
     super.update(_changedProperties);
     if (["timeStart", "timeEnd", "day"].some(x => _changedProperties.has(x))) {
+      this.updateColumn();
       this.dispatchEvent(new Event("mszgs-item-changed", { bubbles: true }));
     }
+  }
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.updateColumn();
   }
 
   public get time(): TimeSpan {
@@ -57,7 +76,7 @@ export class TimetableItem extends LitElement {
 
   protected render(): TemplateResult {
     return html`
-      <div class="panel" style=${styleMap(this.column)}>
+      <div class="panel" style=${styleMap(this._gridData)}>
         <div class="panel-heading">
           <span id="title">${this.title}</span>
         </div>
