@@ -3,9 +3,24 @@ import { terser } from "rollup-plugin-terser";
 import minifyHTML from "rollup-plugin-minify-html-literals";
 import autoExternal from "rollup-plugin-auto-external";
 
-const terserConfig = { module: true, format: { comments: false } };
+/**
+ * @type import("rollup-plugin-terser").Options
+ */
+const terserConfig = {
+  ecma: 2020,
+  module: true,
+  format: { comments: false },
+  mangle: {
+    properties: {
+      regex: /^__/,
+    },
+  },
+};
 
-export default [
+/**
+ * @type import("rollup").RollupOptions[]
+ */
+const rollupConfig = [
   {
     input: ["lib/index.js"],
     output: [
@@ -41,3 +56,5 @@ export default [
     plugins: [minifyHTML(), autoExternal()],
   },
 ];
+
+export default rollupConfig;

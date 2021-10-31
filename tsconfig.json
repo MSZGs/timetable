@@ -8,7 +8,9 @@
     "noImplicitAny": true,
     "outDir": "./lib/",
     "target": "ESNext",
+    "importHelpers": true,
     "experimentalDecorators": true,
+    "useDefineForClassFields": false,
     "plugins": [
       {
         "name": "typescript-lit-html-plugin",
